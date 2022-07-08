@@ -1,5 +1,6 @@
 package com.zhangs.tx;
 
+import com.zhangs.common.ActiveMQConnection;
 import org.apache.activemq.ActiveMQConnectionFactory;
 
 import javax.jms.*;
@@ -7,19 +8,16 @@ import java.io.IOException;
 
 public class JmsConsumer_TX {
 
-    public static final String ACTIVEMQ_URL = "tcp://192.168.10.4:61616";
-    public static final String QUEUE_NAME = "queue01";
+    public static final String QUEUE_NAME = "Queue-TX";
 
     public static void main(String[] args) throws JMSException, IOException {
-        //1.创建连接工厂,按照给定的url地址，采用默认的用户名和密码
-        ActiveMQConnectionFactory activeMQConnectionFactory = new ActiveMQConnectionFactory(ACTIVEMQ_URL);
-        //2.通过连接工厂获得连接并启动
-        Connection connection = activeMQConnectionFactory.createConnection();
+        ActiveMQConnection activeMQConnection = new ActiveMQConnection();
+        Connection connection = activeMQConnection.ActiveMQConnection();
         connection.start();
 
-        //3.创建会话session
-        //第一个参数 事务； 第二个签收
-        Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+        //3.创建会话session，两个参数transacted=事务，acknowledgeMode=确认模式（签收）
+        //消费者开启了事务就必须手动提交，不然会重复消费消息
+        Session session = connection.createSession(true, Session.AUTO_ACKNOWLEDGE);
         //4.创建目的地（具体是队列还是主题topic）
         Queue queue = session.createQueue(QUEUE_NAME);
 
@@ -50,16 +48,36 @@ public class JmsConsumer_TX {
         //订阅者或接收者通过messageConsumer的setMessageListener(new MessageListener() 注册一个消息监听器
         //当消息到达后，系统会自动调用监听器 onMessage(Message message) 方法
         messageConsumer.setMessageListener(new MessageListener() {
+            int a = 0;
             @Override
             public void onMessage(Message message) {
                 if (null != message && message instanceof TextMessage) {
-                    TextMessage textMessage = (TextMessage) message;
                     try {
+                        TextMessage textMessage = (TextMessage) message;
                         System.out.println("****消费者接收到消息****" + textMessage.getText());
+                        if (a == 0) {
+                            System.out.println("commit");
+                            session.commit();
+                        }
+                        if (a == 2) {
+                            System.out.println("rollback");
+                            session.rollback();
+                        }
+                        a++;
+
+                        //消息签收
+//                        textMessage.acknowledge();
                         //接受消息属性
 //                        System.out.println("****消费者接收到消息属性***" + textMessage.getStringProperty("c01"));
-                    } catch (JMSException e) {
-                        e.printStackTrace();
+
+
+                    } catch (Exception e) {
+                        System.out.println("出现异常，消费失败，放弃消费");
+                        try {
+                            session.rollback();
+                        } catch (JMSException ex) {
+                            ex.printStackTrace();
+                        }
                     }
                 }
                 //接收map类型的消息
