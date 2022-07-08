@@ -1,4 +1,4 @@
-package com.zhangs.activemq;
+package com.zhangs.embed;
 
 import org.apache.activemq.ActiveMQConnectionFactory;
 
@@ -6,8 +6,10 @@ import javax.jms.*;
 
 public class JmsProduce {
 
-    public static final String ACTIVEMQ_URL = "tcp://192.168.10.4:61616";
-    public static final String QUEUE_NAME = "queue01";
+//    public static final String ACTIVEMQ_URL = "tcp://192.168.10.4:61616";
+    public static final String ACTIVEMQ_URL = "tcp://127.0.0.1:61616";
+
+    public static final String QUEUE_NAME = "Broker";
 
     public static void main(String[] args) throws JMSException {
 

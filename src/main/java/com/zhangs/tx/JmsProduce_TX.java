@@ -19,7 +19,7 @@ public class JmsProduce_TX {
 
         //3.创建会话session
         //第一个参数 事务； 第二个签收
-        Session session = connection.createSession(true, Session.AUTO_ACKNOWLEDGE);
+        Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
         //4.创建目的地（具体是队列还是主题topic）
         Queue queue = session.createQueue(QUEUE_NAME); //类似 Collection collection = new ArrayList;
 
@@ -54,7 +54,7 @@ public class JmsProduce_TX {
 
             //开启事务后，使用commit提交，这批消息才真正的被提交
             //事务提交
-            session.commit();
+//            session.commit();
 
         }catch (Exception e) {
             System.out.println("出现异常，消息回滚");

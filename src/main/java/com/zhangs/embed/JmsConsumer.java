@@ -1,4 +1,4 @@
-package com.zhangs.activemq;
+package com.zhangs.embed;
 
 import org.apache.activemq.ActiveMQConnectionFactory;
 
@@ -7,8 +7,10 @@ import java.io.IOException;
 
 public class JmsConsumer {
 
-    public static final String ACTIVEMQ_URL = "tcp://192.168.10.4:61616";
-    public static final String QUEUE_NAME = "queue01";
+//    public static final String ACTIVEMQ_URL = "tcp://192.168.10.4:61616";
+    public static final String ACTIVEMQ_URL = "tcp://127.0.0.1:61616";
+
+    public static final String QUEUE_NAME = "Broker";
 
     public static void main(String[] args) throws JMSException, IOException {
         //1.创建连接工厂,按照给定的url地址，采用默认的用户名和密码

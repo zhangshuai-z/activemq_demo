@@ -17,7 +17,7 @@ public class JmsConsumer_TX {
 
         //3.创建会话session，两个参数transacted=事务，acknowledgeMode=确认模式（签收）
         //消费者开启了事务就必须手动提交，不然会重复消费消息
-        Session session = connection.createSession(true, Session.AUTO_ACKNOWLEDGE);
+        Session session = connection.createSession(false, Session.CLIENT_ACKNOWLEDGE);
         //4.创建目的地（具体是队列还是主题topic）
         Queue queue = session.createQueue(QUEUE_NAME);
 
@@ -55,18 +55,18 @@ public class JmsConsumer_TX {
                     try {
                         TextMessage textMessage = (TextMessage) message;
                         System.out.println("****消费者接收到消息****" + textMessage.getText());
-                        if (a == 0) {
-                            System.out.println("commit");
-                            session.commit();
-                        }
-                        if (a == 2) {
-                            System.out.println("rollback");
-                            session.rollback();
-                        }
+//                        if (a == 0) {
+//                            System.out.println("commit");
+//                            session.commit();
+//                        }
+//                        if (a == 2) {
+//                            System.out.println("rollback");
+//                            session.rollback();
+//                        }
                         a++;
 
                         //消息签收
-//                        textMessage.acknowledge();
+                        textMessage.acknowledge();
                         //接受消息属性
 //                        System.out.println("****消费者接收到消息属性***" + textMessage.getStringProperty("c01"));
 
