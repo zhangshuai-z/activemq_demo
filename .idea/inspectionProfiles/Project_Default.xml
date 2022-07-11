@@ -6,5 +6,15 @@
         <language minSize="105" name="Java" />
       </Languages>
     </inspection_tool>
+    <inspection_tool class="MavenPackageUpdate" enabled="true" level="WEAK WARNING" enabled_by_default="true">
+      <option name="excludeList">
+        <list>
+          <option value="org.springframework.boot:spring-boot-starter" />
+          <option value="org.springframework.boot:spring-boot-starter-web" />
+          <option value="org.springframework.boot:spring-boot-starter-test" />
+          <option value="org.springframework.boot:spring-boot-starter-activemq" />
+        </list>
+      </option>
+    </inspection_tool>
   </profile>
 </component>
