@@ -7,6 +7,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 import javax.annotation.Resource;
+import java.io.IOException;
 
 // 加载主类
 @SpringBootTest(classes = MainApp_produce.class)
@@ -22,5 +23,12 @@ public class TestActiveMQ {
     @Test
     public void testSend() {
         queue_produce.produceMessage();
+    }
+
+    @Test
+    public void testScheduledSend() throws IOException {
+        queue_produce.produceMsgScheduled();
+        //测试类开启执行两次就会停止
+        System.in.read();
     }
 }

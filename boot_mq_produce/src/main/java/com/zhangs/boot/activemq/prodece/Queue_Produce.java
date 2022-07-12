@@ -23,4 +23,11 @@ public class Queue_Produce {
         // 一参是目的地，二参是消息的内容
         jmsMessagingTemplate.convertAndSend(queue, "****" + UUID.randomUUID().toString().substring(1, 10));
     }
+
+    //间隔时间3秒钟定投
+    @Scheduled(fixedDelay = 3000)
+    public void produceMsgScheduled() {
+        jmsMessagingTemplate.convertAndSend(queue,"Schedule: " + UUID.randomUUID().toString().substring(1,10));
+        System.out.println("*****produceMsgScheduled send ok");
+    }
 }
